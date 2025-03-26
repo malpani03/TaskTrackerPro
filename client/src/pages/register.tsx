@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useLocation } from "wouter";
 import { useMutation } from "@tanstack/react-query";
-import { apiRequest, queryClient } from "@/lib/queryClient";
+import { apiRequest } from "@/lib/queryClient";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -18,63 +18,71 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { Link } from "wouter";
 
-const loginSchema = z.object({
+const registerSchema = z.object({
   username: z.string().min(3, {
     message: "Username must be at least 3 characters.",
   }),
   password: z.string().min(6, {
     message: "Password must be at least 6 characters.",
   }),
+  confirmPassword: z.string().min(6, {
+    message: "Confirm password must be at least 6 characters.",
+  }),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords do not match",
+  path: ["confirmPassword"],
 });
 
-type LoginFormValues = z.infer<typeof loginSchema>;
+type RegisterFormValues = z.infer<typeof registerSchema>;
 
-export default function Login() {
+export default function Register() {
   const [, navigate] = useLocation();
   const { toast } = useToast();
   const [error, setError] = useState<string | null>(null);
 
-  const form = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
+  const form = useForm<RegisterFormValues>({
+    resolver: zodResolver(registerSchema),
     defaultValues: {
       username: "",
       password: "",
+      confirmPassword: "",
     },
   });
 
   const { mutate, isPending } = useMutation({
-    mutationFn: async (data: LoginFormValues) => {
+    mutationFn: async (data: Omit<RegisterFormValues, "confirmPassword">) => {
       return apiRequest({
-        url: "/api/auth/login",
+        url: "/api/auth/register",
         method: "POST",
         data,
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
       toast({
-        title: "Login successful",
-        description: "Welcome back!",
+        title: "Registration successful",
+        description: "Your account has been created. Please log in.",
       });
-      navigate("/dashboard");
+      navigate("/login");
     },
     onError: (error: any) => {
-      setError(error.message || "Login failed. Please check your credentials.");
+      setError(error.message || "Registration failed. Please try again.");
     },
   });
 
-  function onSubmit(data: LoginFormValues) {
+  function onSubmit(data: RegisterFormValues) {
     setError(null);
-    mutate(data);
+    // Remove confirmPassword before sending to the API
+    const { confirmPassword, ...registerData } = data;
+    mutate(registerData);
   }
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-background">
       <div className="w-full max-w-md p-8 space-y-8 bg-card rounded-lg shadow-lg border border-border">
         <div className="space-y-2 text-center">
-          <h1 className="text-3xl font-bold">Welcome Back</h1>
+          <h1 className="text-3xl font-bold">Create Account</h1>
           <p className="text-muted-foreground">
-            Log in to your account to continue
+            Register to start managing your tasks and expenses
           </p>
         </div>
 
@@ -93,7 +101,7 @@ export default function Login() {
                 <FormItem>
                   <FormLabel>Username</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter your username" {...field} />
+                    <Input placeholder="Choose a username" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -109,7 +117,25 @@ export default function Login() {
                   <FormControl>
                     <Input
                       type="password"
-                      placeholder="Enter your password"
+                      placeholder="Create a password"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="confirmPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Confirm Password</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="password"
+                      placeholder="Confirm your password"
                       {...field}
                     />
                   </FormControl>
@@ -123,16 +149,16 @@ export default function Login() {
               className="w-full"
               disabled={isPending}
             >
-              {isPending ? "Logging in..." : "Login"}
+              {isPending ? "Creating Account..." : "Register"}
             </Button>
           </form>
         </Form>
 
         <div className="text-center mt-6">
           <p className="text-sm text-muted-foreground">
-            Don't have an account?{" "}
-            <Link href="/register" className="text-primary hover:underline">
-              Register
+            Already have an account?{" "}
+            <Link href="/login" className="text-primary hover:underline">
+              Login
             </Link>
           </p>
         </div>
