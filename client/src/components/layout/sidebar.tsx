@@ -1,12 +1,18 @@
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, CheckSquare, Wallet2, BarChart3, Settings } from "lucide-react";
+import { LayoutDashboard, CheckSquare, Wallet2, BarChart3, Settings, LogOut, User } from "lucide-react";
+import { useAuth } from "@/contexts/auth-context";
 
 export default function Sidebar() {
   const [location] = useLocation();
+  const { user, logout, isAuthenticated } = useAuth();
 
   const isActive = (path: string) => {
     return location === path;
+  };
+
+  const handleLogout = async () => {
+    await logout();
   };
 
   return (
@@ -19,12 +25,27 @@ export default function Sidebar() {
           TaskFlow
         </h1>
       </div>
+      
+      {isAuthenticated && user && (
+        <div className="p-4 border-b">
+          <div className="flex items-center">
+            <div className="h-8 w-8 rounded-full bg-primary/10 mr-3 flex items-center justify-center text-primary">
+              <span className="text-sm font-medium">{user.username.substring(0, 2).toUpperCase()}</span>
+            </div>
+            <div>
+              <p className="text-sm font-medium text-gray-700">{user.username}</p>
+              <p className="text-xs text-gray-500">Logged in</p>
+            </div>
+          </div>
+        </div>
+      )}
+      
       <nav className="flex-1 p-4 space-y-2">
         <Link 
-          href="/"
+          href="/dashboard"
           className={cn(
             "block px-4 py-2 rounded-md font-medium flex items-center",
-            isActive("/") 
+            isActive("/dashboard") || isActive("/") 
               ? "bg-indigo-50 text-primary" 
               : "text-gray-600 hover:bg-gray-100"
           )}
@@ -68,21 +89,26 @@ export default function Sidebar() {
           <BarChart3 className="h-5 w-5 mr-3" />
           Reports
         </Link>
-        <button className="block w-full text-left px-4 py-2 rounded-md text-gray-600 hover:bg-gray-100 font-medium flex items-center">
-          <Settings className="h-5 w-5 mr-3" />
-          Settings
-        </button>
       </nav>
+      
       <div className="p-4 border-t">
-        <div className="flex items-center">
-          <div className="h-8 w-8 rounded-full bg-gray-300 mr-3 flex items-center justify-center text-gray-600">
-            <span className="text-sm font-medium">AJ</span>
-          </div>
-          <div>
-            <p className="text-sm font-medium text-gray-700">Alex Johnson</p>
-            <p className="text-xs text-gray-500">alex@example.com</p>
-          </div>
-        </div>
+        {isAuthenticated ? (
+          <button 
+            onClick={handleLogout}
+            className="w-full px-4 py-2 rounded-md text-red-600 hover:bg-red-50 font-medium flex items-center"
+          >
+            <LogOut className="h-5 w-5 mr-3" />
+            Logout
+          </button>
+        ) : (
+          <Link 
+            href="/login"
+            className="block w-full px-4 py-2 rounded-md text-gray-600 hover:bg-gray-100 font-medium flex items-center"
+          >
+            <User className="h-5 w-5 mr-3" />
+            Login
+          </Link>
+        )}
       </div>
     </aside>
   );
