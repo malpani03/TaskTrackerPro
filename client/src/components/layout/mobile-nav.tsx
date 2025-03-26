@@ -38,61 +38,57 @@ export default function MobileNav() {
         {/* Mobile Menu (Toggleable) */}
         <div className={cn("border-t", isMenuOpen ? "block" : "hidden")}>
           <nav className="px-2 pt-2 pb-4 space-y-1">
-            <Link href="/">
-              <a 
-                className={cn(
-                  "block px-3 py-2 rounded-md text-base font-medium flex items-center",
-                  isActive("/") 
-                    ? "bg-indigo-50 text-primary" 
-                    : "text-gray-600 hover:bg-gray-50"
-                )}
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <LayoutDashboard className="h-5 w-5 mr-3" />
-                Dashboard
-              </a>
+            <Link 
+              href="/"
+              className={cn(
+                "block px-3 py-2 rounded-md text-base font-medium flex items-center",
+                isActive("/") 
+                  ? "bg-indigo-50 text-primary" 
+                  : "text-gray-600 hover:bg-gray-50"
+              )}
+              onClick={() => setIsMenuOpen(false)}
+            >
+              <LayoutDashboard className="h-5 w-5 mr-3" />
+              Dashboard
             </Link>
-            <Link href="/tasks">
-              <a 
-                className={cn(
-                  "block px-3 py-2 rounded-md text-base font-medium flex items-center",
-                  isActive("/tasks") 
-                    ? "bg-indigo-50 text-primary" 
-                    : "text-gray-600 hover:bg-gray-50"
-                )}
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <CheckSquare className="h-5 w-5 mr-3" />
-                Tasks
-              </a>
+            <Link 
+              href="/tasks"
+              className={cn(
+                "block px-3 py-2 rounded-md text-base font-medium flex items-center",
+                isActive("/tasks") 
+                  ? "bg-indigo-50 text-primary" 
+                  : "text-gray-600 hover:bg-gray-50"
+              )}
+              onClick={() => setIsMenuOpen(false)}
+            >
+              <CheckSquare className="h-5 w-5 mr-3" />
+              Tasks
             </Link>
-            <Link href="/expenses">
-              <a 
-                className={cn(
-                  "block px-3 py-2 rounded-md text-base font-medium flex items-center",
-                  isActive("/expenses") 
-                    ? "bg-indigo-50 text-primary" 
-                    : "text-gray-600 hover:bg-gray-50"
-                )}
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <Wallet2 className="h-5 w-5 mr-3" />
-                Expenses
-              </a>
+            <Link 
+              href="/expenses"
+              className={cn(
+                "block px-3 py-2 rounded-md text-base font-medium flex items-center",
+                isActive("/expenses") 
+                  ? "bg-indigo-50 text-primary" 
+                  : "text-gray-600 hover:bg-gray-50"
+              )}
+              onClick={() => setIsMenuOpen(false)}
+            >
+              <Wallet2 className="h-5 w-5 mr-3" />
+              Expenses
             </Link>
-            <Link href="/reports">
-              <a 
-                className={cn(
-                  "block px-3 py-2 rounded-md text-base font-medium flex items-center",
-                  isActive("/reports") 
-                    ? "bg-indigo-50 text-primary" 
-                    : "text-gray-600 hover:bg-gray-50"
-                )}
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <BarChart3 className="h-5 w-5 mr-3" />
-                Reports
-              </a>
+            <Link 
+              href="/reports"
+              className={cn(
+                "block px-3 py-2 rounded-md text-base font-medium flex items-center",
+                isActive("/reports") 
+                  ? "bg-indigo-50 text-primary" 
+                  : "text-gray-600 hover:bg-gray-50"
+              )}
+              onClick={() => setIsMenuOpen(false)}
+            >
+              <BarChart3 className="h-5 w-5 mr-3" />
+              Reports
             </Link>
           </nav>
         </div>
@@ -101,41 +97,45 @@ export default function MobileNav() {
       {/* Bottom Navigation for Mobile */}
       <div className="md:hidden fixed bottom-0 w-full bg-white border-t shadow-lg z-10">
         <div className="flex justify-around">
-          <Link href="/">
-            <a className={cn(
+          <Link 
+            href="/"
+            className={cn(
               "flex flex-col items-center py-2",
               isActive("/") ? "text-primary" : "text-gray-500"
-            )}>
-              <LayoutDashboard className="h-6 w-6" />
-              <span className="text-xs">Home</span>
-            </a>
+            )}
+          >
+            <LayoutDashboard className="h-6 w-6" />
+            <span className="text-xs">Home</span>
           </Link>
-          <Link href="/tasks">
-            <a className={cn(
+          <Link 
+            href="/tasks"
+            className={cn(
               "flex flex-col items-center py-2",
               isActive("/tasks") ? "text-primary" : "text-gray-500"
-            )}>
-              <CheckSquare className="h-6 w-6" />
-              <span className="text-xs">Tasks</span>
-            </a>
+            )}
+          >
+            <CheckSquare className="h-6 w-6" />
+            <span className="text-xs">Tasks</span>
           </Link>
-          <Link href="/expenses">
-            <a className={cn(
+          <Link 
+            href="/expenses"
+            className={cn(
               "flex flex-col items-center py-2",
               isActive("/expenses") ? "text-primary" : "text-gray-500"
-            )}>
-              <Wallet2 className="h-6 w-6" />
-              <span className="text-xs">Expenses</span>
-            </a>
+            )}
+          >
+            <Wallet2 className="h-6 w-6" />
+            <span className="text-xs">Expenses</span>
           </Link>
-          <Link href="/reports">
-            <a className={cn(
+          <Link 
+            href="/reports"
+            className={cn(
               "flex flex-col items-center py-2",
               isActive("/reports") ? "text-primary" : "text-gray-500"
-            )}>
-              <BarChart3 className="h-6 w-6" />
-              <span className="text-xs">Reports</span>
-            </a>
+            )}
+          >
+            <BarChart3 className="h-6 w-6" />
+            <span className="text-xs">Reports</span>
           </Link>
         </div>
       </div>

@@ -75,36 +75,40 @@ export default function Tasks() {
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
-            <TabsList>
-              <TabsTrigger 
-                value="day" 
+            <div className="flex space-x-2">
+              <Button 
+                variant={dateFilter === "day" ? "default" : "outline"}
+                size="sm"
                 onClick={() => setDateFilter("day")}
                 className={dateFilter === "day" ? "bg-indigo-50 text-primary" : ""}
               >
                 Today
-              </TabsTrigger>
-              <TabsTrigger 
-                value="week" 
+              </Button>
+              <Button 
+                variant={dateFilter === "week" ? "default" : "outline"}
+                size="sm"
                 onClick={() => setDateFilter("week")}
                 className={dateFilter === "week" ? "bg-indigo-50 text-primary" : ""}
               >
                 This Week
-              </TabsTrigger>
-              <TabsTrigger 
-                value="month" 
+              </Button>
+              <Button 
+                variant={dateFilter === "month" ? "default" : "outline"}
+                size="sm"
                 onClick={() => setDateFilter("month")}
                 className={dateFilter === "month" ? "bg-indigo-50 text-primary" : ""}
               >
                 This Month
-              </TabsTrigger>
-              <TabsTrigger 
-                value="all" 
+              </Button>
+              <Button 
+                variant={dateFilter === "all" ? "default" : "outline"}
+                size="sm"
                 onClick={() => setDateFilter("all")}
                 className={dateFilter === "all" ? "bg-indigo-50 text-primary" : ""}
               >
                 All Tasks
-              </TabsTrigger>
-            </TabsList>
+              </Button>
+            </div>
           </div>
         </CardHeader>
       </Card>

@@ -51,7 +51,7 @@ export default function Expenses() {
   const filteredExpenses = filterExpensesByDate(expenses, dateFilter)
     .filter(expense => {
       // Category filter
-      if (categoryFilter && expense.category !== categoryFilter) {
+      if (categoryFilter && categoryFilter !== "all" && expense.category !== categoryFilter) {
         return false;
       }
       
@@ -115,7 +115,7 @@ export default function Expenses() {
                   <SelectValue placeholder="All Categories" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Categories</SelectItem>
+                  <SelectItem value="all">All Categories</SelectItem>
                   {expenseCategories.map((category) => (
                     <SelectItem key={category} value={category}>
                       {category}

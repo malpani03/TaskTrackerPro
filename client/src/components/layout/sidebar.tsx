@@ -20,54 +20,58 @@ export default function Sidebar() {
         </h1>
       </div>
       <nav className="flex-1 p-4 space-y-2">
-        <Link href="/">
-          <a className={cn(
+        <Link 
+          href="/"
+          className={cn(
             "block px-4 py-2 rounded-md font-medium flex items-center",
             isActive("/") 
               ? "bg-indigo-50 text-primary" 
               : "text-gray-600 hover:bg-gray-100"
-          )}>
-            <LayoutDashboard className="h-5 w-5 mr-3" />
-            Dashboard
-          </a>
+          )}
+        >
+          <LayoutDashboard className="h-5 w-5 mr-3" />
+          Dashboard
         </Link>
-        <Link href="/tasks">
-          <a className={cn(
+        <Link 
+          href="/tasks"
+          className={cn(
             "block px-4 py-2 rounded-md font-medium flex items-center",
             isActive("/tasks") 
               ? "bg-indigo-50 text-primary" 
               : "text-gray-600 hover:bg-gray-100"
-          )}>
-            <CheckSquare className="h-5 w-5 mr-3" />
-            Tasks
-          </a>
+          )}
+        >
+          <CheckSquare className="h-5 w-5 mr-3" />
+          Tasks
         </Link>
-        <Link href="/expenses">
-          <a className={cn(
+        <Link 
+          href="/expenses"
+          className={cn(
             "block px-4 py-2 rounded-md font-medium flex items-center",
             isActive("/expenses") 
               ? "bg-indigo-50 text-primary" 
               : "text-gray-600 hover:bg-gray-100"
-          )}>
-            <Wallet2 className="h-5 w-5 mr-3" />
-            Expenses
-          </a>
+          )}
+        >
+          <Wallet2 className="h-5 w-5 mr-3" />
+          Expenses
         </Link>
-        <Link href="/reports">
-          <a className={cn(
+        <Link 
+          href="/reports"
+          className={cn(
             "block px-4 py-2 rounded-md font-medium flex items-center",
             isActive("/reports") 
               ? "bg-indigo-50 text-primary" 
               : "text-gray-600 hover:bg-gray-100"
-          )}>
-            <BarChart3 className="h-5 w-5 mr-3" />
-            Reports
-          </a>
+          )}
+        >
+          <BarChart3 className="h-5 w-5 mr-3" />
+          Reports
         </Link>
-        <a href="#" className="block px-4 py-2 rounded-md text-gray-600 hover:bg-gray-100 font-medium flex items-center">
+        <button className="block w-full text-left px-4 py-2 rounded-md text-gray-600 hover:bg-gray-100 font-medium flex items-center">
           <Settings className="h-5 w-5 mr-3" />
           Settings
-        </a>
+        </button>
       </nav>
       <div className="p-4 border-t">
         <div className="flex items-center">
