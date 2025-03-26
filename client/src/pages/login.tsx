@@ -50,13 +50,15 @@ export default function Login() {
         data,
       });
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
+    onSuccess: (data) => {
+      queryClient.setQueryData(["/api/auth/user"], data);
       toast({
         title: "Login successful",
         description: "Welcome back!",
       });
-      navigate("/dashboard");
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 100);
     },
     onError: (error: any) => {
       setError(error.message || "Login failed. Please check your credentials.");

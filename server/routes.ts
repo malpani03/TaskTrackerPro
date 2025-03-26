@@ -250,7 +250,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
         // Remove password from response
         const { password, ...userWithoutPassword } = user;
-        return res.json(userWithoutPassword);
+        res.status(200).json(userWithoutPassword);
       });
     })(req, res, next);
   });
@@ -268,9 +268,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
     if (!req.isAuthenticated()) {
       return res.status(401).json({ message: "Not authenticated" });
     }
-    // Remove password from response
-    const { password, ...userWithoutPassword } = req.user as any;
-    res.json(userWithoutPassword);
+    try {
+      // Remove password from response
+      const { password, ...userWithoutPassword } = req.user as any;
+      return res.status(200).json(userWithoutPassword);
+    } catch (error) {
+      console.error("Error getting user data:", error);
+      return res.status(500).json({ message: "Error retrieving user data" });
+    }
   });
 
   // Create HTTP server

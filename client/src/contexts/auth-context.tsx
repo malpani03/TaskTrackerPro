@@ -33,6 +33,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         method: "GET" 
       }).catch(() => null),
     staleTime: 1000 * 60 * 5, // 5 minutes
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
   });
 
   useEffect(() => {
@@ -47,13 +49,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         data: credentials,
       });
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
+    onSuccess: (data) => {
+      queryClient.setQueryData(["/api/auth/user"], data);
+      setIsAuthenticated(true);
       toast({
         title: "Login successful",
         description: "Welcome back!",
       });
-      navigate("/dashboard");
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 100);
     },
   });
 
@@ -65,13 +70,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
+      queryClient.setQueryData(["/api/auth/user"], null);
       setIsAuthenticated(false);
       toast({
         title: "Logged out",
         description: "You have been logged out.",
       });
-      navigate("/login");
+      setTimeout(() => {
+        navigate("/login");
+      }, 100);
     },
   });
 

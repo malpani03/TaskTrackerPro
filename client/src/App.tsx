@@ -41,7 +41,13 @@ function AuthLayout({ children }: { children: React.ReactNode }) {
 
 function AppRoutes() {
   const [location] = useLocation();
+  const { isAuthenticated, user } = useAuth();
   const isAuthPage = location === "/login" || location === "/register";
+  
+  // If user is authenticated and tries to access auth pages, redirect to dashboard
+  if (isAuthPage && isAuthenticated && user) {
+    return <Redirect to="/dashboard" />;
+  }
   
   const Layout = isAuthPage ? AuthLayout : MainLayout;
   
