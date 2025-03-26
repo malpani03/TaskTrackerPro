@@ -1,28 +1,27 @@
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import bcrypt from 'bcryptjs';
+import { User } from '@shared/schema';
 import { storage } from './storage';
-import type { User } from '@shared/schema';
 
-// Configure Passport to use local strategy
+// Configure the local strategy for use by Passport
 passport.use(new LocalStrategy(async (username, password, done) => {
   try {
     // Find the user by username
     const user = await storage.getUserByUsername(username);
     
-    // If user doesn't exist, return error
+    // If user not found
     if (!user) {
       return done(null, false, { message: 'Invalid username or password' });
     }
     
-    // Check if password is correct
+    // Validate password
     const isMatch = await bcrypt.compare(password, user.password);
-    
     if (!isMatch) {
       return done(null, false, { message: 'Invalid username or password' });
     }
     
-    // If all is well, return the user
+    // If credentials are valid, return the user object
     return done(null, user);
   } catch (error) {
     return done(error);

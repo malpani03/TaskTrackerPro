@@ -1,9 +1,12 @@
 import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertTaskSchema, insertExpenseSchema } from "@shared/schema";
+import { insertTaskSchema, insertExpenseSchema, insertUserSchema } from "@shared/schema";
 import { z } from "zod";
 import { fromZodError } from "zod-validation-error";
+import passport from "./auth";
+import { isAuthenticated, isNotAuthenticated } from "./middleware";
+import bcrypt from "bcryptjs";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // API routes for tasks
@@ -198,6 +201,76 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       res.status(500).json({ message: "Failed to delete expense" });
     }
+  });
+
+  // Authentication routes
+  app.post("/api/auth/register", isNotAuthenticated, async (req: Request, res: Response) => {
+    try {
+      const result = insertUserSchema.safeParse(req.body);
+      if (!result.success) {
+        const error = fromZodError(result.error);
+        return res.status(400).json({ message: error.message });
+      }
+
+      // Check if username already exists
+      const existingUser = await storage.getUserByUsername(result.data.username);
+      if (existingUser) {
+        return res.status(400).json({ message: "Username already taken" });
+      }
+
+      // Hash the password
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(result.data.password, salt);
+
+      // Create user with hashed password
+      const user = await storage.createUser({
+        ...result.data,
+        password: hashedPassword
+      });
+
+      // Remove password from response
+      const { password, ...userWithoutPassword } = user;
+      res.status(201).json(userWithoutPassword);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to register user" });
+    }
+  });
+
+  app.post("/api/auth/login", isNotAuthenticated, (req: Request, res: Response, next) => {
+    passport.authenticate("local", (err: Error, user: any, info: { message: string }) => {
+      if (err) {
+        return next(err);
+      }
+      if (!user) {
+        return res.status(401).json({ message: info.message || "Invalid credentials" });
+      }
+      req.logIn(user, (err) => {
+        if (err) {
+          return next(err);
+        }
+        // Remove password from response
+        const { password, ...userWithoutPassword } = user;
+        return res.json(userWithoutPassword);
+      });
+    })(req, res, next);
+  });
+
+  app.post("/api/auth/logout", isAuthenticated, (req: Request, res: Response) => {
+    req.logout((err) => {
+      if (err) {
+        return res.status(500).json({ message: "Failed to logout" });
+      }
+      res.status(204).end();
+    });
+  });
+
+  app.get("/api/auth/user", (req: Request, res: Response) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Not authenticated" });
+    }
+    // Remove password from response
+    const { password, ...userWithoutPassword } = req.user as any;
+    res.json(userWithoutPassword);
   });
 
   // Create HTTP server
